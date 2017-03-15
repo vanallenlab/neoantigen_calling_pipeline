@@ -169,10 +169,10 @@ def MutationsToDNASeq(maf, length, patID, outpath, indicator):
 		# Get output from R script that will contain the coding sequence for transcript of interest
 		annot_transcript = row[8].split('.')[0]
 		if isnonstop == 0:
-			Rscriptcommand = "Rscript /xchip/cga_home/margolis/mutationsToNeoantigen/goldStandard/getCodingSequence.R '"+annot_transcript+"'"
+			Rscriptcommand = "Rscript getCodingSequence.R '"+annot_transcript+"'"
 			codingseq = subprocess.check_output(Rscriptcommand, shell=True)
 		else:
-			Rscriptcommand = "Rscript /xchip/cga_home/margolis/mutationsToNeoantigen/goldStandard/getCodingSequenceNonstop.R '"+annot_transcript+"'"
+			Rscriptcommand = "Rscript getCodingSequenceNonstop.R '"+annot_transcript+"'"
 			codingseq = subprocess.check_output(Rscriptcommand, shell=True)
 		
 		# Check to see whether coding sequence was found by biomaRt (if not, continue)

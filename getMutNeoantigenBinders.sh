@@ -50,8 +50,8 @@ PAT_DIR=$(cat $patient_dir | head -n $SGE_TASK_ID | tail -n 1)
 # writes both to outfile )
 
 echo 'Running mafToFasta.py script for both SNVs and indels.'
-python /xchip/cga_home/margolis/mutationsToNeoantigen/goldStandard/mafToFastaV2.py ../../test_mafs/testmaf.maf 0 9,10 $PAT_DIR ./$PAT_DIR
-python /xchip/cga_home/margolis/mutationsToNeoantigen/goldStandard/mafToFastaV2.py ../../test_mafs/indel.maf 1 9,10 $PAT_DIR ./$PAT_DIR
+python mafToFastaV2.py ../../test_mafs/testmaf.maf 0 9,10 $PAT_DIR ./$PAT_DIR
+python mafToFastaV2.py ../../test_mafs/indel.maf 1 9,10 $PAT_DIR ./$PAT_DIR
 
 # ----------------------------------------------------------------------------------------------- #
 
@@ -62,7 +62,7 @@ python /xchip/cga_home/margolis/mutationsToNeoantigen/goldStandard/mafToFastaV2.
 # *NOTE*: 1 for NetMHCPan, 2 for NetMHCIIPan. Must run script twice if you want both. 
 
 echo 'Running runNetMHCpan.py script.'
-python /xchip/cga_home/margolis/mutationsToNeoantigen/goldStandard/runNetMHCpan.py ./$PAT_DIR/len9pep_FASTA_snv.txt,./$PAT_DIR/len9pep_FASTA_indel.txt,./$PAT_DIR/len10pep_FASTA_snv.txt,./$PAT_DIR/len10pep_FASTA_indel.txt ./$PAT_DIR/hla_alleles.txt 9,9,10,10 1 ./$PAT_DIR
+python runNetMHCpan.py ./$PAT_DIR/len9pep_FASTA_snv.txt,./$PAT_DIR/len9pep_FASTA_indel.txt,./$PAT_DIR/len10pep_FASTA_snv.txt,./$PAT_DIR/len10pep_FASTA_indel.txt ./$PAT_DIR/hla_alleles.txt 9,9,10,10 1 ./$PAT_DIR
 
 # ----------------------------------------------------------------------------------------------- #
 
@@ -74,7 +74,7 @@ python /xchip/cga_home/margolis/mutationsToNeoantigen/goldStandard/runNetMHCpan.
 # *NOTE*: 1 for NetMHCPan, 2 for NetMHCIIPan
 
 echo 'Running mutationPostProcess.py script.'
-python /xchip/cga_home/margolis/mutationsToNeoantigen/goldStandard/mutationPostProcess.py ./$PAT_DIR/NETMHCpan_out_9SNV.xls,./$PAT_DIR/NETMHCpan_out_9InDel.xls,./$PAT_DIR/NETMHCpan_out_10SNV.xls,./$PAT_DIR/NETMHCpan_out_10InDel.xls ./$PAT_DIR/len9pep_headermap_snv.txt,./$PAT_DIR/len9pep_headermap_indel.txt,./$PAT_DIR/len10pep_headermap_snv.txt,./$PAT_DIR/len10pep_headermap_indel.txt 9,9,10,10 $PAT_DIR 1 ./$PAT_DIR/
+python mutationPostProcess.py ./$PAT_DIR/NETMHCpan_out_9SNV.xls,./$PAT_DIR/NETMHCpan_out_9InDel.xls,./$PAT_DIR/NETMHCpan_out_10SNV.xls,./$PAT_DIR/NETMHCpan_out_10InDel.xls ./$PAT_DIR/len9pep_headermap_snv.txt,./$PAT_DIR/len9pep_headermap_indel.txt,./$PAT_DIR/len10pep_headermap_snv.txt,./$PAT_DIR/len10pep_headermap_indel.txt 9,9,10,10 $PAT_DIR 1 ./$PAT_DIR/
 
 # ----------------------------------------------------------------------------------------------- #
 
