@@ -29,6 +29,7 @@ import sys
 import numpy as np
 import subprocess
 from Bio.Seq import Seq
+from ConfigParser import ConfigParser
 # ----------------------------------------------------------------------------------------------- #
 
 
@@ -167,22 +168,24 @@ def MutationsToDNASeq(maf, length, patID, outpath, indicator):
 			end = orig_start + mut_length + (length - distancedict[orfpos][1])
 		
 		# Get output from R script that will contain the coding sequence for transcript of interest
-		annot_transcript = row[8].split('.')[0]
+		annot_transcript = row[8]
+		CONFIG_FILENAME = 'fasta_paths.config'
+		config = ConfigParser()
+		config.read(CONFIG_FILENAME)
 		if isnonstop == 0:
-			Rscriptcommand = "Rscript getCodingSequence.R '"+annot_transcript+"'"
-			codingseq = subprocess.check_output(Rscriptcommand, shell=True)
+			ref_37_path = config.get('Reference Paths','GRCh37cds')
 		else:
-			Rscriptcommand = "Rscript getCodingSequenceNonstop.R '"+annot_transcript+"'"
-			codingseq = subprocess.check_output(Rscriptcommand, shell=True)
+			ref_37_path = config.get('Reference Paths', 'GRCh37cdna')
+		command = "sed -n -e '/"+annot_transcript+"/,/>/ p' "+ref_37_path+" | sed -e '1d;$d'"
+		codingseq = subprocess.check_output(command, shell=True)
 		
 		# Check to see whether coding sequence was found by biomaRt (if not, continue)
-		#errorvec = ['Sequence unavailable','sequence unavailable', '"Sequence unavailable"','"sequence unavailable"']
-		errorvec = ['Seq','seq']
-		if len(codingseq) == 0 or any(x in codingseq for x in errorvec):
+		if len(codingseq) == 0:
 			print 'Error: BiomaRt database cannot return coding sequence for transcript '+annot_transcript+'. Skipping this mutation.'
 			continue
 		
 		# Get length of coding sequence plus position of mutation, and get desired sequence start and end indices
+		codingseq = codingseq.replace('\n','')
 		seqlength = len(codingseq)
 		seqstart = 0
 		seqend = 0
@@ -256,7 +259,8 @@ def writeToOutfile(peps, headers, length, outpath, indicator):
 	# Loop through the peptide, header lists and write to filehandle
 	f = open(filehandle, 'a')
 	for i in range(0, len(peps)):  # The peptide and header lists will always be the same length
-		f.write(headers[i]+'\n'+peps[i]+'\n')
+		if len(peps[i]) > 0:
+			f.write(headers[i]+'\n'+peps[i]+'\n')
 	f.close()
 
 	return
