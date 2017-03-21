@@ -1,6 +1,5 @@
 # ----------------------------------------------------------------------------------------------- #
 # Claire Margolis
-# 17 October 2016
 # mutationPostProcess.py
 #
 # Summary: Takes in NETMHC_out.xls file(s) and does postprocessing to create a more user-friendly 

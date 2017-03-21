@@ -1,6 +1,5 @@
 # ----------------------------------------------------------------------------------------------- #
 # Claire Margolis
-# 17 October 2016
 # runNetMHCpan.py
 #
 # Summary: Takes in one or more FASTA files containing all of the peptides upon which netMHCpan

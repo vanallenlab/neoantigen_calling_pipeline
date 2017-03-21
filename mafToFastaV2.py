@@ -1,6 +1,5 @@
 # ----------------------------------------------------------------------------------------------- #
 # Claire Margolis
-# 13 October 2016
 # mafToFasta.py
 # 
 # Summary: Takes in a .maf file of either SNVs or InDels and translates mutations to peptide 
