@@ -224,6 +224,7 @@ def MutationsToDNASeq(maf, length, patID, outpath, indicator):
 			f = open(nonstopfilehandle, 'a')
 			f.write(nonstoppepheader[0]+'\n'+nonstoppeptide[0]+'\n')
 			nonstopheadermapfile.write('>seq_'+nonstopalphabet[nonstopcounter]+'\t'+patID+'|'+row[7]+'|chr'+row[2]+':'+row[3]+'-'+row[4]+'|'+row[8]+'|'+row[0]+'|'+row[1]+'|'+row[10]+'|'+row[12]+'\n')
+			isnonstop = 0
 			continue
 
 		# Add sequences to lists (mutant and WT for SNV, just mutant for indel)
