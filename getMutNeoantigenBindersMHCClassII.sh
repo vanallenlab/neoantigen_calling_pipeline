@@ -1,4 +1,3 @@
-S
 # Claire Margolis
 # 3 October 2016
 # getMutNeoantigenBindersMHCClassII.sh

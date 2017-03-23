@@ -167,7 +167,7 @@ def MutationsToDNASeq(maf, length, patID, outpath, indicator):
 			end = orig_start + mut_length + (length - distancedict[orfpos][1])
 		
 		# Get output from R script that will contain the coding sequence for transcript of interest
-		annot_transcript = row[8]
+		annot_transcript = row[8].split('.')[0]
 		CONFIG_FILENAME = 'fasta_paths.config'
 		config = ConfigParser()
 		config.read(CONFIG_FILENAME)
