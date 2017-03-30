@@ -46,8 +46,8 @@ PAT_DIR=$(cat $patient_dir | head -n $SGE_TASK_ID | tail -n 1)
 # writes both to outfile )
 
 echo 'Running mafToFasta.py script for both SNVs and indels.'
-python /xchip/cga_home/margolis/mutationsToNeoantigen/PipelineUpdated/mafToFasta.py ../../test_mafs/testmaf.maf 0 14,15 $PAT_DIR ./$PAT_DIR
-python /xchip/cga_home/margolis/mutationsToNeoantigen/PipelineUpdated/mafToFasta.py ../../test_mafs/indel.maf 1 14,15 $PAT_DIR ./$PAT_DIR
+python /xchip/cga_home/margolis/mutationsToNeoantigen/PipelineUpdated/mafToFasta.py ../../test_mafs/testmaf.maf 0 18,19,20 $PAT_DIR ./$PAT_DIR
+python /xchip/cga_home/margolis/mutationsToNeoantigen/PipelineUpdated/mafToFasta.py ../../test_mafs/indel.maf 1 18,19,20 $PAT_DIR ./$PAT_DIR
 
 # ----------------------------------------------------------------------------------------------- #
 
@@ -58,7 +58,7 @@ python /xchip/cga_home/margolis/mutationsToNeoantigen/PipelineUpdated/mafToFasta
 # *NOTE*: 1 for NetMHCPan, 2 for NetMHCIIPan. Must run script twice if you want both. 
 
 echo 'Running runNetMHCpan.py script.'
-python /xchip/cga_home/margolis/mutationsToNeoantigen/PipelineUpdated/runNetMHCpan.py ./$PAT_DIR/len14pep_FASTA_snv.txt,./$PAT_DIR/len14pep_FASTA_indel.txt,./$PAT_DIR/len15pep_FASTA_snv.txt,./$PAT_DIR/len15pep_FASTA_indel.txt ./$PAT_DIR/hla_alleles_mhcII.txt 14,14,15,15 2 ./$PAT_DIR
+python /xchip/cga_home/margolis/mutationsToNeoantigen/PipelineUpdated/runNetMHCpan.py ./$PAT_DIR/len18pep_FASTA_snv.txt,./$PAT_DIR/len18pep_FASTA_indel.txt,./$PAT_DIR/len19pep_FASTA_snv.txt,./$PAT_DIR/len19pep_FASTA_indel.txt,./$PAT_DIR/len20pep_FASTA_snv.txt,./$PAT_DIR/len20pep_FASTA_indel.txt ./$PAT_DIR/hla_alleles_mhcII.txt 18,18,19,19,20,20 2 ./$PAT_DIR
 
 # ----------------------------------------------------------------------------------------------- #
 
@@ -70,7 +70,7 @@ python /xchip/cga_home/margolis/mutationsToNeoantigen/PipelineUpdated/runNetMHCp
 # *NOTE*: 1 for NetMHCPan, 2 for NetMHCIIPan
 
 echo 'Running mutationPostProcess.py script.'
-python /xchip/cga_home/margolis/mutationsToNeoantigen/PipelineUpdated/mutationPostProcess.py ./$PAT_DIR/NETMHCIIpan_out_14SNV.xls,./$PAT_DIR/NETMHCIIpan_out_14InDel.xls,./$PAT_DIR/NETMHCIIpan_out_15SNV.xls,./$PAT_DIR/NETMHCIIpan_out_15InDel.xls ./$PAT_DIR/len14pep_headermap_snv.txt,./$PAT_DIR/len14pep_headermap_indel.txt,./$PAT_DIR/len15pep_headermap_snv.txt,./$PAT_DIR/len15pep_headermap_indel.txt 14,14,15,15 $PAT_DIR 2 ./$PAT_DIR/
+python /xchip/cga_home/margolis/mutationsToNeoantigen/PipelineUpdated/mutationPostProcess.py ./$PAT_DIR/NETMHCIIpan_out_18SNV.xls,./$PAT_DIR/NETMHCIIpan_out_18InDel.xls,./$PAT_DIR/NETMHCIIpan_out_19SNV.xls,./$PAT_DIR/NETMHCIIpan_out_19InDel.xls,./$PAT_DIR/NETMHCIIpan_out_20SNV.xls,./$PAT_DIR/NETMHCIIpan_out_20InDel.xls ./$PAT_DIR/len18pep_headermap_snv.txt,./$PAT_DIR/len18pep_headermap_indel.txt,./$PAT_DIR/len19pep_headermap_snv.txt,./$PAT_DIR/len19pep_headermap_indel.txt,./$PAT_DIR/len20pep_headermap_snv.txt,./$PAT_DIR/len20pep_headermap_indel.txt 18,18,19,19,20,20 $PAT_DIR 2 ./$PAT_DIR/
 
 # ----------------------------------------------------------------------------------------------- #
 
