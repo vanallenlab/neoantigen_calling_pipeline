@@ -94,23 +94,35 @@ def runNetMHCIIpan(pepfile, hlafile, length, outpath):
                 varianttype = 'InDel'
         # Read in HLA alleles file and process
         with open(hlafile) as f:
-                hlalines  = f.read().splitlines()
+                hlalines = f.read().splitlines()
         hlaalleles = []
         # Determine which input format the hla allele file is in
         if len(hlalines[0].split('\t')) <= 1:  # In already pre-processed format
                 hlaalleles = hlalines
-        else:  # Polysolver output file
-                for line in hlalines:
-                        split = line.split('\t')
-                        # Reformat each allele (2 for each type of HLA A, B, and C)
-                        for i in range(1, 3):
-                                currallele = 'HLA-'
-                                allele = split[i]
-                                components = allele.split('_')
-                                currallele += components[1].upper() + components[2] + ':' + components[3]
-                                hlaalleles.append(currallele)
+        else:  # Seq2HLA output file
+		# DQA1
+		DQA1a = hlalines[1].split('\t')[1].split("'")[0].split('*')[1]
+		DQA1a = DQA1a.split(':')[0]+DQA1a.split(':')[1]
+		DQA1b = hlalines[1].split('\t')[3].split("'")[0].split('*')[1]
+		DQA1b = DQA1b.split(':')[0]+DQA1b.split(':')[1]
+		# DQB1
+		DQB1a = hlalines[2].split('\t')[1].split("'")[0]
+		DQB1b = hlalines[2].split('\t')[3].split("'")[0]
+		# Concatenate DQA/DQB alleles to be in correct format
+		DQA1B1a = 'HLA-DQA1'+DQA1a+'-DQB1'+DQB1a
+		DQA1B1b = 'HLA-'+DQA1b+'-'+DQB1b
+		# DRB1
+		DRB1a = hlalines[3].split('\t')[1].split("'")[0]
+		DRB1b = hlalines[3].split('\t')[3].split("'")[0]
+		# Add alleles to list
+		hlaalleles.append(DQA1B1a)
+		hlaalleles.append(DQA1B1b)
+		hlaalleles.append(DRB1a)
+		hlaalleles.append(DRB1b)
         hlaalleles = list(set(hlaalleles))  # Remove duplicate alleles if there are any
         hlastring = ','.join(hlaalleles)
+
+
 	# Run netMHCIIpan
 	command = 'export NHOME=/xchip/cga_home/margolis/Packages/netMHCIIPan/netMHCIIpan-3.1; export NETMHCpan=/xchip/cga_home/margolis/Packages/netMHCIIPan/netMHCIIpan-3.1/Linux_x86_64; /xchip/cga_home/margolis/Packages/netMHCIIPan/netMHCIIpan-3.1/netMHCIIpan -a '+hlastring+' -f '+pepfile+' -inptype 0 -length '+str(length)+' -fast -filter 1 -affF 500 -rankF 2.0 -s -xls -xlsfile '+outpath+'/NETMHCIIpan_out_'+str(length)+varianttype+'.xls rdir /xchip/cga_home/margolis/Packages/netMHCIIPan/netMHCIIpan-3.1/Linux_x86_64/ > '+outpath+'/netMHCIIpanoutlen_'+str(length)+varianttype+'.txt'
 	subprocess.call(command, shell=True)
