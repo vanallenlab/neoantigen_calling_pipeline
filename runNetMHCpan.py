@@ -99,21 +99,28 @@ def runNetMHCIIpan(pepfile, hlafile, length, outpath):
         # Determine which input format the hla allele file is in
         if len(hlalines[0].split('\t')) <= 1:  # In already pre-processed format
                 hlaalleles = hlalines
-        else:  # Seq2HLA output file
+        else:  # PHLAT output file
 		# DQA1
-		DQA1a = hlalines[1].split('\t')[1].split("'")[0].split('*')[1]
+		DQA1a = hlalines[4].split('\t')[1].split('*')[1][0:5]
 		DQA1a = DQA1a.split(':')[0]+DQA1a.split(':')[1]
-		DQA1b = hlalines[1].split('\t')[3].split("'")[0].split('*')[1]
+		DQA1b = hlalines[4].split('\t')[2].split('*')[1][0:5]
 		DQA1b = DQA1b.split(':')[0]+DQA1b.split(':')[1]
 		# DQB1
-		DQB1a = hlalines[2].split('\t')[1].split("'")[0]
-		DQB1b = hlalines[2].split('\t')[3].split("'")[0]
+		DQB1a = hlalines[5].split('\t')[1].split('*')[1][0:5]
+		DQB1a = DQB1a.split(':')[0]+DQB1a.split(':')[1]
+		DQB1b = hlalines[5].split('\t')[2].split('*')[1][0:5]
+		DQB1b = DQB1b.split(':')[0]+DQB1b.split(':')[1]
 		# Concatenate DQA/DQB alleles to be in correct format
 		DQA1B1a = 'HLA-DQA1'+DQA1a+'-DQB1'+DQB1a
-		DQA1B1b = 'HLA-'+DQA1b+'-'+DQB1b
+		DQA1B1b = 'HLA-DQA1'+DQA1b+'-DQB1'+DQB1b
 		# DRB1
-		DRB1a = hlalines[3].split('\t')[1].split("'")[0]
-		DRB1b = hlalines[3].split('\t')[3].split("'")[0]
+		DRB1a = hlalines[6].split('\t')[1].split('*')[1][0:5]
+		DRB1a = DRB1a.split(':')[0]+DRB1a.split(':')[1]
+		DRB1b = hlalines[6].split('\t')[2].split('*')[1][0:5]
+		DRB1b = DRB1b.split(':')[0]+DRB1b.split(':')[1]
+		# Format DRB1 alleles
+		DRB1a = 'DRB1_'+DRB1a
+		DRB1b = 'DRB1_'+DRB1b
 		# Add alleles to list
 		hlaalleles.append(DQA1B1a)
 		hlaalleles.append(DQA1B1b)
