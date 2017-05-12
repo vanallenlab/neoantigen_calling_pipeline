@@ -55,8 +55,8 @@ def DNASeqToProtein(nucs, headers, length):
                 fullprotein = ''
                 for s in xrange(0, len(seq), 3):
                         codon = seq[s:s+3]
-                        # Break if the sequence ends with trailing AAs (should never happen)
-                        if len(codon) != 3:
+                        # Break if the sequence ends with trailing AAs (should never happen) or codon is not in table (i.e., has an "N" for unknwn base)
+                        if len(codon) != 3 or codon not in codontable:
                                 break
                         # Find corresponding AA to codon
                         AA = codontable[codon]
