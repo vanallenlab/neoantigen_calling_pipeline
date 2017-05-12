@@ -110,8 +110,10 @@ def runNetMHCIIpan(pepfile, hlafile, length, outpath):
 		DQB1a = DQB1a.split(':')[0]+DQB1a.split(':')[1]
 		DQB1b = hlalines[5].split('\t')[2].split('*')[1][0:5]
 		DQB1b = DQB1b.split(':')[0]+DQB1b.split(':')[1]
-		# Concatenate DQA/DQB alleles to be in correct format
+		# Concatenate four DQ isoforms to be in correct format
 		DQA1B1a = 'HLA-DQA1'+DQA1a+'-DQB1'+DQB1a
+		DQA1aB1b = 'HLA-DQA1'+DQA1a+'-DQB1'+DQB1b
+		DQA1bB1a = 'HLA-DQA1'+DQA1b+'-DQB1'+DQB1a
 		DQA1B1b = 'HLA-DQA1'+DQA1b+'-DQB1'+DQB1b
 		# DRB1
 		DRB1a = hlalines[6].split('\t')[1].split('*')[1][0:5]
@@ -123,6 +125,8 @@ def runNetMHCIIpan(pepfile, hlafile, length, outpath):
 		DRB1b = 'DRB1_'+DRB1b
 		# Add alleles to list
 		hlaalleles.append(DQA1B1a)
+		hlaalleles.append(DQA1aB1b)
+		hlaalleles.append(DQA1bB1a)
 		hlaalleles.append(DQA1B1b)
 		hlaalleles.append(DRB1a)
 		hlaalleles.append(DRB1b)
