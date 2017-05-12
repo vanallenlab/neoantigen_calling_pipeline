@@ -44,7 +44,7 @@ def processSingleFileOutput(netMHCfile, mapfile, length, patID, version):
         	alleles = f.readline().strip().split('\t')
         alleles = filter(None, alleles)  # Remove empty strings just in case
 	# Read in rest of file (skip HLA alleles at the top and file header
-	data = np.loadtxt(netMHCfile, dtype=str, delimiter='\t', skiprows=2, ndmin=2)
+	data = np.loadtxt(netMHCfile, dtype='S40', delimiter='\t', skiprows=2, ndmin=2)
         nrow = data.shape[0]
         ncol = data.shape[1]
 	# Move columns so that data is in long form
