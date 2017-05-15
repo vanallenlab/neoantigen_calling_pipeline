@@ -259,10 +259,10 @@ def writeToOutfile(peps, headers, length, outpath, indicator):
 		for i in range(0, len(peps)):
 			if (len(peps[i])) > 0:
 				if 'mut' in headers[i]:
-					if 'seq_'+headers[i].split('_')[1]+'_wt' in headers:
+					if '>seq_'+headers[i].split('_')[1]+'_wt' in headers:
 						f.write(headers[i]+'\n'+peps[i]+'\n')
 				else:
-					if 'seq_'+headers[i].split('_')[1]+'_mut' in headers:
+					if '>seq_'+headers[i].split('_')[1]+'_mut' in headers:
 						f.write(headers[i]+'\n'+peps[i]+'\n')
 		f.close()
 	# If InDels, do this:
