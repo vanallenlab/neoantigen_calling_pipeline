@@ -253,15 +253,23 @@ def writeToOutfile(peps, headers, length, outpath, indicator):
 	# If SNVs, do this:
 	if indicator == 0:
 		filehandle = outpath+'/len'+str(length)+'pep_FASTA_snv.txt'
+		# Loop through the peptide, header lists and write to filehandle
+		f = open(filehandle, 'a')
+		# In the case of SNVs, need to check to make sure every mutant has corresponding wt and vice versa
+		for i in range(0, len(peps)-1,2):
+			if len(peps[i]) > 0:
+				if headers[i].split('_')[1] == headers[i+1].split('_')[1]:
+					f.write(headers[i]+'\n'+peps[i]+'\n'+headers[i+1]+'\n'+peps[i+1]+'\n')
+		f.close()
 	# If InDels, do this:
 	else:
 		filehandle = outpath+'/len'+str(length)+'pep_FASTA_indel.txt'
-	# Loop through the peptide, header lists and write to filehandle
-	f = open(filehandle, 'a')
-	for i in range(0, len(peps)):  # The peptide and header lists will always be the same length
-		if len(peps[i]) > 0:
-			f.write(headers[i]+'\n'+peps[i]+'\n')
-	f.close()
+		# Loop through the peptide, header lists and write to filehandle
+		f = open(filehandle, 'a')
+		for i in range(0, len(peps)):  # The peptide and header lists will always be the same length
+			if len(peps[i]) > 0:
+				f.write(headers[i]+'\n'+peps[i]+'\n')
+		f.close()
 
 	return
 # ----------------------------------------------------------------------------------------------- #
