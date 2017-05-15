@@ -28,6 +28,7 @@
 import sys
 import numpy as np
 import subprocess
+import os
 
 # ----------------------------------------------------------------------------------------------- #
 
@@ -134,9 +135,10 @@ def runNetMHCIIpan(pepfile, hlafile, length, outpath):
         hlastring = ','.join(hlaalleles)
 
 
-	# Run netMHCIIpan
-	command = 'export NHOME=/xchip/cga_home/margolis/Packages/netMHCIIPan/netMHCIIpan-3.1; export NETMHCpan=/xchip/cga_home/margolis/Packages/netMHCIIPan/netMHCIIpan-3.1/Linux_x86_64; /xchip/cga_home/margolis/Packages/netMHCIIPan/netMHCIIpan-3.1/netMHCIIpan -a '+hlastring+' -f '+pepfile+' -inptype 0 -length '+str(length)+' -fast -filter 1 -affF 500 -rankF 2.0 -s -xls -xlsfile '+outpath+'/NETMHCIIpan_out_'+str(length)+varianttype+'.xls rdir /xchip/cga_home/margolis/Packages/netMHCIIPan/netMHCIIpan-3.1/Linux_x86_64/ > '+outpath+'/netMHCIIpanoutlen_'+str(length)+varianttype+'.txt'
-	subprocess.call(command, shell=True)
+	# Run netMHCIIpan if file is not empty
+	if os.path.getsize(pepfile) > 1:
+		command = 'export NHOME=/xchip/cga_home/margolis/Packages/netMHCIIPan/netMHCIIpan-3.1; export NETMHCpan=/xchip/cga_home/margolis/Packages/netMHCIIPan/netMHCIIpan-3.1/Linux_x86_64; /xchip/cga_home/margolis/Packages/netMHCIIPan/netMHCIIpan-3.1/netMHCIIpan -a '+hlastring+' -f '+pepfile+' -inptype 0 -length '+str(length)+' -fast -filter 1 -affF 500 -rankF 2.0 -s -xls -xlsfile '+outpath+'/NETMHCIIpan_out_'+str(length)+varianttype+'.xls rdir /xchip/cga_home/margolis/Packages/netMHCIIPan/netMHCIIpan-3.1/Linux_x86_64/ > '+outpath+'/netMHCIIpanoutlen_'+str(length)+varianttype+'.txt'
+		subprocess.call(command, shell=True)
 
 	# Catch case where peptide file was empty (create dummy file) 
         dummyfile = outpath+'/NETMHCIIpan_out_'+str(length)+varianttype+'.xls'
