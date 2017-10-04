@@ -149,6 +149,7 @@ def MutationsToDNASeq(maf, length, patID, outpath, indicator):
                 	for i in range(0, len(codonchange)):
                         	if codonchange[i].isupper():
                                 	orfpos = i  # Set ORF variable
+					break
 		else:  # If InDel, use codon_change .maf field but do further processing
 			codonstartnum = (((row[11].split('('))[1]).split('-'))[0]
 			cdnastartnum = 0
@@ -166,6 +167,9 @@ def MutationsToDNASeq(maf, length, patID, outpath, indicator):
 			snvlength = orig_end-orig_start+1
 			start = orig_start - (length - distancedict[orfpos][0])
 			end = orig_end + (length - distancedict[orfpos][1])
+			if row[13] != 'SNP': #Account for DNPs
+				start = start + 3
+				end = end + 3
 		else:  # For InDels, do this:
 			start = orig_start - (length - distancedict[orfpos][0])
 			end = orig_start + mut_length + (length - distancedict[orfpos][1])
