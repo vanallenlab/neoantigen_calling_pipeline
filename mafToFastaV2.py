@@ -119,8 +119,12 @@ def MutationsToDNASeq(maf, length, patID, outpath, indicator):
 		orig_start = 0
 		orig_end = 0
 		if indicator == 0:  # SNVs
-			orig_start = int(((row[10].split('.')[1]).split('>')[0])[0:-1])-1 # Subtract because MAFs are 1-indexed but python is 0-indexed
-			orig_end = orig_start # SNVs only affect one position
+			if row[13] == 'SNP':
+				orig_start = int(((row[10].split('.')[1]).split('>')[0])[0:-1])-1 # Subtract because MAFs are 1-indexed but python is 0-indexed
+				orig_end = orig_start # SNVs only affect one position
+			else: # case of DNPs or TNPs or ONPs
+				orig_start = int((row[10].split('.')[1]).split('_')[0])-1 
+				orig_end = orig_start + len(row[6].strip()) - 1 # Will be 2 for DNPs, 3 for TNPs, ... for ONPs
 		else:  # InDels
 			if row[13] == 'DEL': # deletion
 				orig_start = int(((row[10].split('.')[1]).split('del')[0]).split('_')[0])-1
