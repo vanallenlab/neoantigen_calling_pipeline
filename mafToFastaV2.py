@@ -118,13 +118,25 @@ def MutationsToDNASeq(maf, length, patID, outpath, indicator):
 		# Calculate coding strand start and end positions
 		orig_start = 0
 		orig_end = 0
-		if indicator == 0:  # SNVs
+		if indicator == 0 and isnonstop == 0:  # SNVs (but NOT nonstop mutations)
 			if row[13] == 'SNP':
 				orig_start = int(((row[10].split('.')[1]).split('>')[0])[0:-1])-1 # Subtract because MAFs are 1-indexed but python is 0-indexed
 				orig_end = orig_start # SNVs only affect one position
 			else: # case of DNPs or TNPs or ONPs
 				orig_start = int((row[10].split('.')[1]).split('_')[0])-1 
 				orig_end = orig_start + len(row[6].strip()) - 1 # Will be 2 for DNPs, 3 for TNPs, ... for ONPs
+		elif indicator == 0 and isnonstop == 1: # Nonstop Mutations specifically
+			if row[13] == 'SNP':
+				if '+' in row[9]: # Deal with cases on positive strand separately
+					orig_start = int(row[14].strip())-1 # Subtract one because positive strand transcript positions seem to be 1-indexed
+					orig_end = orig_start
+				else:
+					orig_start = int(row[14].strip()) # Negative strand transcript positions seem to be 0-indexed...?
+					orig_end = orig_start
+			else: # case of DNP/TNP/ONPs that are also nonstop mutations
+				if '+' in row[9]:
+					orig_start = int(row[14].split('_')[0])-1
+					orig_end = orig_start + len(row[6].strip()) - 1
 		else:  # InDels
 			if row[13] == 'DEL': # deletion
 				orig_start = int(((row[10].split('.')[1]).split('del')[0]).split('_')[0])-1
@@ -186,9 +198,9 @@ def MutationsToDNASeq(maf, length, patID, outpath, indicator):
 		command = "sed -n -e '/"+annot_transcript+"/,/>/ p' "+ref_37_path+" | sed -e '1d;$d'"
 		codingseq = subprocess.check_output(command, shell=True)
 		
-		# Check to see whether coding sequence was found by biomaRt (if not, continue)
+		# Check to see whether transcript sequence has an entry in the reference genome (if not, continue)
 		if len(codingseq) == 0:
-			print 'Error: BiomaRt database cannot return coding sequence for transcript '+annot_transcript+'. Skipping this mutation.'
+			print 'Error: Reference does not contain coding sequence for transcript '+annot_transcript+'. Skipping this mutation.'
 			continue
 		
 		# Get length of coding sequence plus position of mutation, and get desired sequence start and end indices
@@ -228,6 +240,9 @@ def MutationsToDNASeq(maf, length, patID, outpath, indicator):
 			nonstopseqlist = [mutatedseq]
 			nonstopheaderlist = ['>seq_'+nonstopalphabet[nonstopcounter]+'_mut']
 			nonstoppeptide, nonstoppepheader = DNASeqToProtein(nonstopseqlist, nonstopheaderlist, length/3)		
+			if len(nonstoppeptide) < 1 or len(nonstoppepheader) < 1: # If we hit a stop codon and can't make a large enough peptide, continue
+				isnonstop = 0
+				continue
 			nonstopfilehandle = outpath+'/len'+str(length/3)+'pep_FASTA_indel.txt'
 			f = open(nonstopfilehandle, 'a')
 			f.write(nonstoppepheader[0]+'\n'+nonstoppeptide[0]+'\n')
