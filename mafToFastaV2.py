@@ -103,7 +103,7 @@ def MutationsToDNASeq(maf, length, patID, outpath, indicator):
 	# Loop through maf array and generate DNA sequences for each sequence
 	isnonstop = 0 # Set indicator for nonstop mutations
 	nonstopcounter = -1
-	nonstopalphabet = 'abcdefghijklmnopqrstuvwxyz'
+	nonstopalphabet = 'abcdefghijklmnopqrstuvwxyz!@#$%^&*()~`"/,'
 	for row in mafarray:
 		
 		# Check to make sure mutation is one that we care about and skip to next sequence if not
