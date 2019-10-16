@@ -82,9 +82,12 @@ def DNASeqToProtein(nucs, headers, length):
 # mutation location from .maf file Codon_change field, based on ORF orientation calculates nucleotide
 # window to yield correct number of peptides flanking the mutation, calls twoBitToFa function to 
 # get nucleotide sequence, writes header map to output file.
-def MutationsToDNASeq(maf, length, patID, outpath, indicator):
+def MutationsToDNASeq(maf, length, patID, outpath, indicator, cds_path, cdna_path):
 	# Read in maf file (desired columns only)
-        mafarray = np.loadtxt(maf, dtype=str, delimiter='\t', skiprows=1, usecols=(0,1,4,5,6,8,12,15,35,36,39,40,41,9,38,10), ndmin=2)
+	#['Hugo_Symbol' 'Entrez_Gene_Id' 'Chromosome' 'Start_position' 'End_position' 'Variant_Classification' 'Tumor_Seq_Allele2'
+	# 'Tumor_Sample_Barcode' 'Annotation_Transcript' 'Transcript_Strand' 'cDNA_Change' 'Codon_Change' 'Protein_Change' 'Variant_Type'
+	# 'Transcript_Position' 'Reference_Allele']'''
+        mafarray = np.loadtxt(maf, dtype=str, delimiter='\t', skiprows=0, usecols=(0,1,4,5,6,8,12,15, 305, 222, 302, 89, 287, 9, 278, 10), ndmin=2, comment='')
         # Create dictionary containing lengths to go backward and forward based on ORF orientation 
         distancedict = {0:[3,0], 1:[2,1], 2:[1,2]}
         # Open header map file for writing
@@ -188,14 +191,16 @@ def MutationsToDNASeq(maf, length, patID, outpath, indicator):
 		
 		# Get output from R script that will contain the coding sequence for transcript of interest
 		annot_transcript = row[8].split('.')[0]
-		CONFIG_FILENAME = 'fasta_paths.config'
-		config = ConfigParser()
-		config.read(CONFIG_FILENAME)
+		#CONFIG_FILENAME = 'fasta_paths.config'
+		#config = ConfigParser()
+		#config.read(CONFIG_FILENAME)
 		if isnonstop == 0:
-			ref_37_path = config.get('Reference Paths','GRCh37cds')
+			#ref_37_path = config.get('Reference Paths','GRCh37cds')
+			ref_path = cds_path
 		else:
-			ref_37_path = config.get('Reference Paths', 'GRCh37cdna')
-		command = "sed -n -e '/"+annot_transcript+"/,/>/ p' "+ref_37_path+" | sed -e '1d;$d'"
+			#ref_37_path = config.get('Reference Paths', 'GRCh37cdna')
+			ref_path = cdna_path
+		command = "sed -n -e '/"+annot_transcript+"/,/>/ p' "+ref_path+" | sed -e '1d;$d'"
 		codingseq = subprocess.check_output(command, shell=True)
 		
 		# Check to see whether transcript sequence has an entry in the reference genome (if not, continue)
@@ -306,9 +311,9 @@ def writeToOutfile(peps, headers, length, outpath, indicator):
 # Main function
 def main():
         # Check to make sure we have the right number of inputs
-        if len(sys.argv) != 6:
+        if len(sys.argv) != 8:
                 print 'Error: incorrect number of inputs.'
-                print 'Please input a .maf file, .maf file type, the peptide lengths you want, the patient ID, and an outfile path'
+                print 'Please input a .maf file, .maf file type, the peptide lengths you want, the patient ID, an outfile path, and the paths to the cds and cdna reference files.'
                 sys.exit()
         # Store inputs
         maffile = sys.argv[1]
@@ -316,10 +321,12 @@ def main():
 	lengthlist = sys.argv[3].split(',')
         patientID = sys.argv[4]
         outpath = sys.argv[5]
+	cds_fasta_path = sys.argv[6]
+	cdna_fasta_path = sys.argv[7]
 	# For each peptide length in list, do this:
 	for length in lengthlist:
 		# Convert mutation into nucleotide sequences
-		nucleotideseqs, nucleotideheaders = MutationsToDNASeq(maffile, length, patientID, outpath, snvorindel)
+		nucleotideseqs, nucleotideheaders = MutationsToDNASeq(maffile, length, patientID, outpath, snvorindel, cds_fasta_path, cdna_fasta_path)
 		# Convert nucleotide sequences into peptide sequences
 		peptideseqs, peptideheaders = DNASeqToProtein(nucleotideseqs, nucleotideheaders, length)
 		# Print to outfile
