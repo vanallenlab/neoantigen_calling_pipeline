@@ -87,7 +87,7 @@ def MutationsToDNASeq(maf, length, patID, outpath, indicator, cds_path, cdna_pat
 	#['Hugo_Symbol' 'Entrez_Gene_Id' 'Chromosome' 'Start_position' 'End_position' 'Variant_Classification' 'Tumor_Seq_Allele2'
 	# 'Tumor_Sample_Barcode' 'Annotation_Transcript' 'Transcript_Strand' 'cDNA_Change' 'Codon_Change' 'Protein_Change' 'Variant_Type'
 	# 'Transcript_Position' 'Reference_Allele']'''
-        mafarray = np.loadtxt(maf, dtype=str, delimiter='\t', skiprows=0, usecols=(0,1,4,5,6,8,12,15, 305, 222, 302, 89, 287, 9, 278, 10), ndmin=2, comment='')
+        mafarray = np.loadtxt(maf, dtype=str, delimiter='\t', skiprows=0, usecols=(0,1,4,5,6,8,12,15, 305, 222, 302, 89, 287, 9, 278, 10), ndmin=2)
         # Create dictionary containing lengths to go backward and forward based on ORF orientation 
         distancedict = {0:[3,0], 1:[2,1], 2:[1,2]}
         # Open header map file for writing
