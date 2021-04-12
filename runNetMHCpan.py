@@ -67,7 +67,7 @@ def runNetMHCIpan(pepfile, hlafile, length, outpath):
 	hlaalleles = list(set(hlaalleles))  # Remove duplicate alleles if there are any
 	hlastring = ','.join(hlaalleles)
 	# Run netMHCI pan
-	command =  'export NHOME=/xchip/cga_home/margolis/Packages/netMHCPan/netMHCpan-3.0; export NETMHCpan=/xchip/cga_home/margolis/Packages/netMHCPan/netMHCpan-3.0/Linux_x86_64; /xchip/cga_home/margolis/Packages/netMHCPan/netMHCpan-3.0/Linux_x86_64/bin/netMHCpan -a '+hlastring+' -f '+pepfile+' -inptype 0 -l '+str(length)+' -s -xls -xlsfile '+outpath+'/NETMHCpan_out_'+str(length)+varianttype+'.xls -allname /xchip/cga_home/margolis/Packages/netMHCPan/netMHCpan-3.0/Linux_x86_64/data/allelenames -hlapseudo /xchip/cga_home/margolis/Packages/netMHCPan/netMHCpan-3.0/Linux_x86_64/data/MHC_pseudo.dat -t 500 -version /xchip/cga_home/margolis/Packages/netMHCPan/netMHCpan-3.0/data/version -tdir /xchip/cga_home/margolis/Packages/netMHCPan/netMHCpan-3.0/scratch/XXXXXX -rdir /xchip/cga_home/margolis/Packages/netMHCPan/netMHCpan-3.0/Linux_x86_64/ > '+outpath+'/netMHCpanoutlen_'+str(length)+varianttype+'.txt'
+	command =  'export NHOME=/netMHCpan-4.1; export NETMHCpan=/netMHCpan-4.1/Linux_x86_64; /netMHCpan-4.1/Linux_x86_64/bin/netMHCpan -a '+hlastring+' -f '+pepfile+' -inptype 0 -l '+str(length)+' -s -xls -xlsfile '+outpath+'/NETMHCpan_out_'+str(length)+varianttype+'.xls -allname /netMHCpan-4.1/Linux_x86_64/data/allelenames -hlapseudo /netMHCpan-4.1/Linux_x86_64/data/MHC_pseudo.dat -t 500 -version /xchip/cga_home/margolis/Packages/netMHCPan/netMHCpan-3.0/data/version -tdir /netMHCpan-4.1/scratch/XXXXXX -rdir /netMHCpan-4.1/Linux_x86_64/ > '+outpath+'/netMHCpanoutlen_'+str(length)+varianttype+'.txt'
 	subprocess.call(command, shell=True)
 	
 	# Catch case where peptide file was empty (create dummy file) 
@@ -137,7 +137,7 @@ def runNetMHCIIpan(pepfile, hlafile, length, outpath):
 
 	# Run netMHCIIpan if file is not empty
 	if os.path.getsize(pepfile) > 1:
-		command = 'export NHOME=/xchip/cga_home/margolis/Packages/netMHCIIPan/netMHCIIpan-3.1; export NETMHCpan=/xchip/cga_home/margolis/Packages/netMHCIIPan/netMHCIIpan-3.1/Linux_x86_64; /xchip/cga_home/margolis/Packages/netMHCIIPan/netMHCIIpan-3.1/netMHCIIpan -a '+hlastring+' -f '+pepfile+' -inptype 0 -length '+str(length)+' -fast -filter 1 -affF 500 -rankF 2.0 -s -xls -xlsfile '+outpath+'/NETMHCIIpan_out_'+str(length)+varianttype+'.xls rdir /xchip/cga_home/margolis/Packages/netMHCIIPan/netMHCIIpan-3.1/Linux_x86_64/ > '+outpath+'/netMHCIIpanoutlen_'+str(length)+varianttype+'.txt'
+		command = 'export NHOME=/netMHCIIpan-4.0; export NETMHCpan=/netMHCIIpan-4.0/Linux_x86_64; /netMHCIIpan-4.0/netMHCIIpan -a '+hlastring+' -f '+pepfile+' -inptype 0 -length '+str(length)+' -fast -filter 1 -affF 500 -rankF 2.0 -s -xls -xlsfile '+outpath+'/NETMHCIIpan_out_'+str(length)+varianttype+'.xls rdir /netMHCIIpan-4.0/Linux_x86_64/ > '+outpath+'/netMHCIIpanoutlen_'+str(length)+varianttype+'.txt'
 		subprocess.call(command, shell=True)
 
 	# Catch case where peptide file was empty (create dummy file) 
